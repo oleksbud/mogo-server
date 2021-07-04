@@ -1,7 +1,5 @@
 import winston from 'winston';
 
-const ENV = process.env.NODE_ENV;
-
 const getLogger = (module: NodeModule) => {
     const { timestamp, combine, colorize, label, printf  } = winston.format;
     //get last 2 part of module path, as label of log messages
@@ -13,8 +11,9 @@ const getLogger = (module: NodeModule) => {
         return `${timestamp} [${label}] ${level}: ${message}`;
     });
 
-    // Levels: { error: 0, warn: 1, info: 2, verbose: 3, debug: 4, silly: 5 }
+    // Levels: { error: 0, warn: 1, info: 2, http: 3, verbose: 4, debug: 5, silly: 6 }
     return winston.createLogger({
+        level: 'http',
         format: combine(
             label({ label: path }),
             colorize(),

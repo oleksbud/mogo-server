@@ -3,3 +3,12 @@ export interface ServerConfig {
     host: string;
     port: number;
 }
+
+export interface JsonErrorItem {
+    code: number;
+    message: string;
+}
+
+export interface JsonError {
+    error: JsonErrorItem;
+}
