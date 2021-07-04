@@ -3,5 +3,10 @@
     "host": "localhost",
     "port": "27017",
     "dbName": "review_books"
+  },
+  "server": {
+    "protocol": "http",
+    "host": "localhost",
+    "port": 3000
   }
 }
