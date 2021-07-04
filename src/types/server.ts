@@ -12,3 +12,7 @@ export interface JsonErrorItem {
 export interface JsonError {
     error: JsonErrorItem;
 }
+
+export interface DbError {
+    error: Object
+}

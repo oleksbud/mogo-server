@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
+import {NextFunction, Request, Response} from 'express';
 import appLogger from './appLogger';
-import { JsonError } from '../types/server';
+import {DbError, JsonError} from '../types/server';
 import { ERRORS } from '../constants';
 
 const log = appLogger(module);
@@ -9,14 +9,20 @@ export const createJsonError  = (code: number, message: string): JsonError => ({
   error: { code, message }
 });
 
-const errorHandler = (err: Error, req: Request, res: Response) => {
-    console.log(err);
-    if (err.hasOwnProperty('message')) {
-        log.error(err.message);
+export const createObjectError = (obj: Object): DbError => ({
+    error: { code: 500, ...obj }
+});
 
-        res.status(400).json(createJsonError(400, err.message));
+const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
+    if (res.headersSent || !err) {
+        return next(err);
+    }
+    if (err.message) {
+        log.error(err.message);
+        res.status(500).json(createObjectError(err));
     } else {
-        res.status(400).json(createJsonError(400, ERRORS.BAD_REQUEST));
+        log.error(ERRORS.SERVER)
+        res.status(500).json(createJsonError(500, ERRORS.SERVER));
     }
 };
 

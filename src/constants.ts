@@ -4,6 +4,7 @@ export const EXIT_CODE = {
 };
 
 export const ERRORS = {
+    SERVER: 'Server error',
     BAD_REQUEST: 'Bad request parameters',
     NOT_FOUND: 'Entry point not found',
 };
