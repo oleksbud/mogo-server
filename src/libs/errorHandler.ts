@@ -1,15 +1,19 @@
 import {NextFunction, Request, Response} from 'express';
 import appLogger from './appLogger';
-import {DbError, JsonError} from '../types/server';
+import {ErrorFieldValidation, JsonError} from '../types/server';
 import { ERRORS } from '../constants';
 
 const log = appLogger(module);
 
-export const createJsonError  = (code: number, message: string): JsonError => ({
+export const createJsonError = (code: number, message: string): JsonError => ({
   error: { code, message }
 });
 
-export const createObjectError = (obj: Object): DbError => ({
+export const createValidationError = (code: number, message: string, errors: ErrorFieldValidation[] | null) => ({
+    error: { code, message, errors }
+});
+
+export const createObjectError = (obj: Object) => ({
     error: { code: 500, ...obj }
 });
 

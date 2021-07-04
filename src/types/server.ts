@@ -13,6 +13,13 @@ export interface JsonError {
     error: JsonErrorItem;
 }
 
-export interface DbError {
-    error: Object
+export interface ErrorFieldValidation {
+    field: string;
+    reason: string;
+}
+
+export interface ValidationResult {
+    data: any;
+    statusCode: number;
+    errors: ErrorFieldValidation[] | null;
 }
