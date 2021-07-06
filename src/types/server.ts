@@ -4,6 +4,18 @@ export interface ServerConfig {
     port: number;
 }
 
+export interface CookieConfig {
+    path: string;
+    httpOnly: boolean,
+    maxAge: any
+}
+
+export interface SessionConfig {
+    secret: string;
+    name: string;
+    cookie: CookieConfig;
+}
+
 export interface JsonErrorItem {
     code: number;
     message: string;
@@ -23,3 +35,5 @@ export interface ValidationResult {
     statusCode: number;
     errors: ErrorFieldValidation[] | null;
 }
+
+export type CallbackFunction = (error: any, value: any) => void;

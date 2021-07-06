@@ -1,21 +1,41 @@
 import express, { Request, Response } from 'express';
 import config from 'config';
+import passport from 'passport';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import expressSession from 'express-session';
 import {ERRORS} from './constants';
-import {ServerConfig} from './types/server';
+import {ServerConfig, SessionConfig} from './types/server';
 import appLogger from './libs/appLogger';
 import httpLogger from './libs/httpLogger';
 import errorHandler, {createJsonError} from './libs/errorHandler';
 import apiRoutes from './routes/apiRoutes';
+import passportInitialize from './libs/passport';
+import {mongoStore} from './libs/mongo';
 
 // configure modules
 const serverConfig: ServerConfig = config.get('server');
+const sessionConfig: SessionConfig = config.get('session');
 const log = appLogger(module);
 const app = express();
+passportInitialize();
+log.debug('DEBUG MODE IS ON');
 
 // server middleware
-app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(expressSession({
+    secret: sessionConfig.secret,
+    cookie: sessionConfig.cookie,
+    name: sessionConfig.name,
+    resave: false,
+    saveUninitialized: true,
+    store: mongoStore
+}));
 app.use(express.json());
 app.use(httpLogger);
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // routing
 app.use('/api', apiRoutes);

@@ -11,3 +11,10 @@ export interface Book {
     initialAuthorId?: number;
     authorId?: string;
 }
+
+export interface User {
+    _id?: string;
+    username: string;
+    hashedPassword: string;
+    salt: string;
+}

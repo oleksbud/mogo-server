@@ -1,5 +1,6 @@
 import config from 'config';
 import mongoose from 'mongoose';
+import MongoStore from 'connect-mongo';
 import appLogger from './appLogger';
 import {MongoConfig} from '../types/mongo';
 
@@ -25,6 +26,11 @@ connectedMongo.connection.on('error', (error) => {
 
 connectedMongo.connection.on('disconnected', () => {
     log.info('DB is disconnected');
+})
+
+export const mongoStore = MongoStore.create({
+    mongoUrl: connectionString,
+    ttl: 14 * 24 * 60 * 60 // = 14 days. Default
 })
 
 export default connectedMongo;
