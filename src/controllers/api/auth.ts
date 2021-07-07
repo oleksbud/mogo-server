@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response} from 'express';
 import User from '../../models/user';
+import {createJsonErrorItem} from '../../libs/errorHandler';
 
 const login = (req: Request, res: Response) => {
     res.send(req.user);
@@ -26,7 +27,7 @@ const signup = (req: Request, res: Response, next: NextFunction) => {
 
 const mustAuthenticated = (req: Request, res: Response, next: NextFunction) => {
     if (!req.isAuthenticated()) {
-        return res.status(401).send({ result: 'Not authorized'});
+        return res.status(401).send(createJsonErrorItem(401, 'Not authorized'));
     }
     next();
 }

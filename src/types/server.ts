@@ -36,4 +36,4 @@ export interface ValidationResult {
     errors: ErrorFieldValidation[] | null;
 }
 
-export type CallbackFunction = (error: any, value: any) => void;
+export type CallbackFunction = (error: any, value?: any) => void;

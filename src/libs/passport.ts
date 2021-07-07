@@ -2,10 +2,11 @@ import passport from 'passport';
 import {Strategy} from 'passport-local';
 import User from '../models/user';
 import {User as TUser } from '../types/models';
+import {CallbackFunction} from '../types/server';
 
 const passportInitialize = () => {
     passport.use(new Strategy(
-        function (username, password, done) {
+        function (username: string, password: string, done: CallbackFunction) {
             // @ts-ignore
             User.authorize(username, password, done);
         }

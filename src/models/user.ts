@@ -4,6 +4,7 @@ import connectedMongo from '../libs/mongo';
 import {CallbackFunction} from '../types/server';
 
 import appLogger from '../libs/appLogger';
+import {createJsonErrorItem} from '../libs/errorHandler';
 
 const log = appLogger(module);
 
@@ -24,11 +25,11 @@ const schema = new connectedMongo.Schema({
 });
 
 /**
- * We will keep passwords at encripted form
+ * We will keep passwords at encrypted form
  * @param password
  * @returns {*}
  */
-schema.methods.encryptPassword = function (password) {
+schema.methods.encryptPassword = function (password: string) {
     const User: any = this;
     return crypto.createHmac('sha256', User.salt).update(password).digest('hex');
 };
@@ -56,7 +57,7 @@ schema.virtual('password')
  * @param password
  * @returns {boolean|*}
  */
-schema.methods.checkPassword = function (password) {
+schema.methods.checkPassword = function (password: string) {
     const User: any = this;
 
     return User.encryptPassword(password) === User.hashedPassword;
@@ -68,7 +69,7 @@ schema.methods.checkPassword = function (password) {
  * @param password
  * @param callback
  */
-schema.statics.authorize = function (username, password, callback) {
+schema.statics.authorize = function (username: string, password: string, callback: CallbackFunction) {
     log.debug(`REQ: Username: ${username}, password: ${password}`);
     const User = this;
 
@@ -85,10 +86,10 @@ schema.statics.authorize = function (username, password, callback) {
                     callback(null, user);
                 } else {
                     // the received password doesn't match saved one
-                    callback(new Error('Authorization error'), null);
+                    callback(createJsonErrorItem(401, 'Authorization error'), null);
                 }
             } else {
-                callback(new Error('No user found'), null);
+                callback(createJsonErrorItem(404, 'No user found'), null);
             }
         }
     ], callback);
@@ -116,7 +117,7 @@ schema.statics.createUser = function (username, password, callback) {
                     callback(null, newUser);
                 });
             } else {
-                callback(new Error('User has already existed'), null);
+                callback(createJsonErrorItem(409, 'User has already existed'), null);
             }
         }
     ], callback);

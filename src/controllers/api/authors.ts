@@ -34,17 +34,6 @@ const getAuthorById = (req: Request, res: Response, next: NextFunction): Promise
         .catch((e: Error) => { next(e); });
 };
 
-// example of the method 'getAuthorById' implemented with async/await
-const getAuthorById_asyncAwait = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
-    try {
-        const author: Author = await AuthorModel.findById(id);
-        res.send(author);
-    } catch (e: any) {
-        next(e);
-    }
-};
-
 const getAuthorByInitialId = (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const id = req.params.id;
     return AuthorModel.findOne({ id })
@@ -58,7 +47,7 @@ const getAuthorByInitialId = (req: Request, res: Response, next: NextFunction): 
         .catch((e: Error) => { next(e); });
 };
 
-const postAuthor = (req: Request, res: Response, next: NextFunction) => {
+const postAuthor = (req: Request, res: Response) => {
     const data = req.body;
     return validators.validateParams(data)
         .then( () => validators.isExist(data))
